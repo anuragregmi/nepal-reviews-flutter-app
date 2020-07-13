@@ -51,7 +51,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void _addButtonPressed() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -63,22 +62,61 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List fetchDataFromAPI() {
+    return [
+      {
+        "id": 1,
+        "title": "Siddhartha Hotel",
+        "description": "Hotel Siddhartha has a restaurant, bar, a shared lounge and garden in Nepālganj"
+            ". Boasting room service, this property also provides guests with a casino. The hotel features an outdoor swimming pool, fitness centre, evening entertainment and a 24-hour front desk."
+            "The hotel offers a continental or buffet breakfast."
+            "Hotel Siddhartha offers a terrace."
+            "The accommodation offers a business centre, free WiFi access and free private parking."
+            "We speak your language!"
+            "Hotel Siddhartha has been welcoming Booking.com guests since 10 Aug 2018.",
+        "location": "Nepalgunj, Banke",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-w/19/33/bb/24/hotel-siddhartha.jpg"
+      },
+      {
+        "id": 2,
+        "title": "Hyatt Regency",
+        "description": "Best Luxury Hotel & Resort in Kathmandu Hyatt Regency "
+            "Kathmandu is a five-star luxury hotel and resort in Kathmandu,"
+            "  set on 37 acres of landscaped grounds and created in the traditional"
+            " Newari style of Nepalese architecture. This beautiful hotel and resort is"
+            " located on the road to the Boudhanath Stupa: the most holy of all Tibetan Buddhist "
+            "shrines outside of Tibet and a UNESCO World Heritage Site located within a five-minute "
+            "walk from the hotel. The hotel is just four kilometres (2.4 miles) from the Tribhuvan "
+            "International Airport and six kilometres (3.7 miles) from the city center of Kathmandu.",
+        "location": "Boudha, Kathmandu",
+        "image": "https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/6608967321245190-d7f0c7a82d2611eab6c20242ac11000a.jpg?&output-quality=75&downsize=520:350&crop=520:350;0,27&output-format=jpg"
+      }
+    ];
+  }
+
   List<Card> getCards() {
     var cards = List<Card>();
-    for (var i = 0; i < 6; i++) {
+    final results = fetchDataFromAPI();
+
+    for (var i = 0; i < results.length; i++) {
+      final hotelData = results[i];
+      final title = hotelData['title'];
+      final description = hotelData['description'];
+      final location = hotelData['location'];
+      final imageUrl = hotelData['image'];
+
       cards.add(
         Card(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.hotel),
-                title: Text('Siddhartha Hotel'),
+                title: Text(title),
                 subtitle: Text(
-                  'Hotel Siddhartha features a restaurant, bar,'
-                  ' a shared lounge and garden in Nepālganj.'
-                  ' Featuring room service, this property '
-                  'also provides guests with a casino..',
+                  description,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 5,
                 ),
               ),
               ButtonBar(
@@ -90,7 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (ctx) => new DetailPage()));
+                              builder: (ctx) => new DetailPage(
+                                  title, description, location, imageUrl
+                              )));
                     },
                   ),
                   FlatButton(
